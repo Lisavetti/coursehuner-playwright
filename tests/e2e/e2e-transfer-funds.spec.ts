@@ -1,21 +1,25 @@
 import { test, expect } from "@playwright/test";
+import { LoginPage } from '../../page-objects/LoginPage';
+import { HomePage } from '../../page-objects/HomePage';
 
 test.describe("Transfer Funds and make payments", () => {
-    test.beforeEach(async ({page}) => {
-        await page.goto('http://zero.webappsecurity.com/index.html');
-        await page.click('#signin_button');
+    let homePage: HomePage;
+    let loginPage: LoginPage;
 
-        await page.fill('#user_login', 'username');
-        await page.fill('#user_password', 'password');
+    test.beforeEach(async ({ page }) => {
+        homePage = new HomePage(page);
+        loginPage = new LoginPage(page);
 
-        await page.click('text=Sign in');
+        await homePage.visit();
+        await homePage.clickOnSignInButton();
+        await loginPage.login("username", 'password');
 
-        await page.goto('http://zero.webappsecurity.com/index.html');
-
-        await page.click('#transfer_funds_link');
+        await homePage.visit();
+        await page.click('#online-banking');
     });
 
-    test('Transfer funds', async ({page}) => {
+    test('Transfer funds', async ({ page }) => {
+        await page.click('#transfer_funds_link');
         await page.selectOption('#tf_fromAccountId', '2');
         await page.selectOption('#tf_toAccountId', '3');
         await page.fill('#tf_amount', '500');

@@ -1,23 +1,25 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../../page-objects/LoginPage';
+import { HomePage } from '../../page-objects/HomePage';
 
 test.describe('currency exchange', () => {
+    let homePage : HomePage;
+    let loginPage : LoginPage;
+
     test.beforeEach(async ({page}) => {
-        await page.goto('http://zero.webappsecurity.com/index.html');
-        await page.click('#signin_button');
+        homePage = new HomePage(page);
+        loginPage = new LoginPage(page);
 
-        await page.fill('#user_login', 'username');
-        await page.fill('#user_password', 'password');
+        await homePage.visit();
+        await homePage.clickOnSignInButton();
+        await loginPage.login("username", 'password');
 
-        await page.click('text=Sign in');
-
-        await page.goto('http://zero.webappsecurity.com/index.html');
-
+        await homePage.visit();
         await page.click('#online-banking');
-
-        await page.click('#pay_bills_link');
     });
 
     test('should show currency', async ({page}) => {
+        await page.click('#pay_bills_link');
         await page.click('text=Purchase Foreign Currency')
 
         await page.selectOption('.controls > #pc_currency', 'Eurozone (euro)');
