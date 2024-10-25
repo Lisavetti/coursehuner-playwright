@@ -2,7 +2,8 @@ import { PlaywrightTestConfig } from "@playwright/test";
 
 const config : PlaywrightTestConfig = {
     timeout: 5000,
-    retries: 0, //сколько раз ранить фейлед тесты
+    retries: 0, //сколько раз ранить фейлед тесты,
+    testDir: "tests/tips",
     use: {
         headless: true,
         viewport: {
